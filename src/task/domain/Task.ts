@@ -15,7 +15,7 @@ export class Task{
   completionStatus!: string;
 
   @Column({nullable: false}) // Obligatorio
-  dueDate!: Date;
+  dueDate!: string;
 
   @Column()
   comments!: string;
@@ -26,7 +26,7 @@ export class Task{
   @Column()
   tags!: string;
 
-  @Column()
+  @Column({default: ""})
   urlImage!: string;
 
   @Column({default: () => "CURRENT_TIMESTAMP"})

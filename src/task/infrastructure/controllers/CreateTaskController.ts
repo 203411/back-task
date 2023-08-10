@@ -17,6 +17,7 @@ export class CreateTaskController{
         }
         try{
             const formData = req.body;
+            console.log(formData);
             // let image: Express.MulterS3.File[] = req.files as Express.MulterS3.File[]; 
             
             // Verificar atributos obligatorios
@@ -50,9 +51,9 @@ export class CreateTaskController{
             newTask.comments = formData.comments;
             newTask.responsible = formData.responsible;
             newTask.tags = formData.tags;
-            // newTask.urlImage = formData.image;
+            newTask.urlImage = formData.image;
 
-            const createdTask = await this.createTaskUseCase.run(formData);
+            const createdTask = await this.createTaskUseCase.run(newTask);
             
             if(createdTask){
                 return res.status(201).json({
