@@ -26,8 +26,14 @@ export class Task{
   @Column()
   tags!: string;
 
+  @Column({default: true})
+  isPublic!: boolean;
+
   @Column({default: ""})
   urlImage!: string;
+
+  @Column({default: 1})
+  userId!: number;
 
   @Column({default: () => "CURRENT_TIMESTAMP"})
   creationDate!: Date;

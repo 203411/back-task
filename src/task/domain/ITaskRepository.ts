@@ -1,3 +1,4 @@
+import { GetReponse } from './GetResponse';
 import { Task } from './Task';
 
 export default interface ITaskRepository {
@@ -6,4 +7,5 @@ export default interface ITaskRepository {
     delete(task: Task): Promise<void>;
     update(task: Task): Promise<Partial<Task>>;
     create(task: Task): Promise<Task>;
+    findAndCount(page: number, limit: number): Promise<GetReponse|null>;
 }
