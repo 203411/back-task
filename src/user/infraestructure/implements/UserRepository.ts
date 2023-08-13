@@ -60,7 +60,7 @@ export class UserRepository implements IUserRepository{
     }
     
     async create(user: User): Promise<Partial<User> | null> {
-        const createdUser = await this.repository.create(user);
+        const createdUser = await this.repository.save(user);
         return {
             id: createdUser.id,
             name: createdUser.name,

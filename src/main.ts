@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import taskRouter from "./task/infrastructure/TaskRouter";
-import userRouter from "./user/infraestructure/TaskRouter";
+import userRouter from "./user/infraestructure/UserRouter";
 import moment from 'moment';
 import 'moment-timezone';
 

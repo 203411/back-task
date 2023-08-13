@@ -17,6 +17,7 @@ export class CreateTaskController{
         }
         try{
             const formData = req.body;
+            const userId = req.user ? parseInt(req.user._id) : -1;
             console.log(formData);
             // let image: Express.MulterS3.File[] = req.files as Express.MulterS3.File[]; 
             
@@ -52,6 +53,7 @@ export class CreateTaskController{
             newTask.responsible = formData.responsible;
             newTask.tags = formData.tags;
             newTask.urlImage = formData.image;
+            newTask.userId = userId;
 
             const createdTask = await this.createTaskUseCase.run(newTask);
             

@@ -32,7 +32,7 @@ export class Task{
   @Column({default: ""})
   urlImage!: string;
 
-  @Column({default: 1})
+  @Column()
   userId!: number;
 
   @Column({default: () => "CURRENT_TIMESTAMP"})
