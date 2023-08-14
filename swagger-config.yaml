@@ -18,6 +18,27 @@ paths:
       summary: Gets a task list
       description: Gets a task list
       operationId: findAllTasks
+      parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          description: Number of registers per page
+          required: false
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: Tasks found
@@ -43,6 +64,13 @@ paths:
       summary: Add a new task
       description: Create a new TASK register
       operationId: createTask
+      parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Create a new task register
         content:
@@ -87,6 +115,12 @@ paths:
       description: Returns a single task
       operationId: findByIDTask
       parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           description: ID of task to return
@@ -120,6 +154,12 @@ paths:
       description: Update an existing task by Id
       operationId: updateTask
       parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           description: ID of task to return
@@ -177,6 +217,12 @@ paths:
       description: Delete a task register by ID 
       operationId: deleteTask
       parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           description: ID of task to return
@@ -205,6 +251,277 @@ paths:
           content:
             text/plain:
               example: 'true'
+  /status:
+    get:
+      tags:
+        - task
+      summary: Gets a task list by status
+      description: Gets a task list by status
+      operationId: findAllTasksByStatus
+      parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of task to return
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          description: Number of registers per page
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tasks found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '204':
+          description: No tasks found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /date:
+    get:
+      tags:
+        - task
+      summary: Gets a task list by date
+      description: Gets a task list by date
+      operationId: findAllTasksByDate
+      parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          description: Date of task to return in format DD-MM-YYYY
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          description: Number of registers per page
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tasks found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '204':
+          description: No tasks found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '422':
+          description: Invalid date format. Use DD-MM-YYYY
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /user/:userID:
+    get:
+      tags:
+        - task
+      summary: Gets a task list by user
+      description: Gets a task list by user
+      operationId: findAllTasksByUser
+      parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
+        - name: userID
+          in: path
+          description: User of task to return
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          description: Number of registers per page
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tasks found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '204':
+          description: No tasks found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /responsible:
+    get:
+      tags:
+        - task
+      summary: Gets a task list by responsible
+      description: Gets a task list by responsible
+      operationId: findAllTasksByResponsible
+      parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
+        - name: responsible
+          in: query
+          description: Responsible of task to return
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          description: Number of registers per page
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tasks found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '204':
+          description: No tasks found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+  /tag:
+    get:
+      tags:
+        - task
+      summary: Gets a task list by tag
+      description: Gets a task list by tag
+      operationId: findAllTasksByTag
+      parameters:
+        - name: authorization
+          in: header
+          description: Token of user
+          required: true
+          schema:
+            type: string
+        - name: tag
+          in: query
+          description: Tag of task to return
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          description: Number of registers per page
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tasks found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '204':
+          description: No tasks found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Null'
 
 components:
   schemas:

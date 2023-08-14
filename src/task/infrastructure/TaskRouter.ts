@@ -24,7 +24,6 @@ taskRouter.get('/status',authenticateToken, findByStatusController.run.bind(find
 taskRouter.get('/user/:userID',authenticateToken, findByUserIDController.run.bind(findByUserIDController));
 taskRouter.get('/date',authenticateToken, findByDateController.run.bind(findByDateController));
 taskRouter.get('/responsible',authenticateToken, findByResponsibleController.run.bind(findByResponsibleController));
-
 taskRouter.get('/tag',authenticateToken, findByTagController.run.bind(findByTagController));
 taskRouter.get('/:id',authenticateToken, findByIDTaskController.run.bind(findByIDTaskController));
 taskRouter.put('/:id',authenticateToken, updateTaskController.run.bind(updateTaskController));
