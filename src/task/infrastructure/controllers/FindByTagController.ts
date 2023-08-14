@@ -1,11 +1,11 @@
-import { Task } from "../../domain/Task";
-import { FindAllTasksUseCase } from "../../application/FindAllTasksUseCase";
-import saveLogFile from "../LogsErrorControl";
-import { Response,Request } from "express";
+import { Request, Response } from "express";
+import { FindByTagUseCase } from "../../application/FindByTagUseCase";
 import { validationResult } from "express-validator";
 
-export class FindAllTasksController{
-    constructor(private readonly findAllTasksUseCase: FindAllTasksUseCase){}
+export class FindByTagController{
+    constructor(
+        private readonly findByTagUseCase: FindByTagUseCase
+    ){}
 
     async run(req: Request, res: Response): Promise<Response>{
         const errors = validationResult(req);
@@ -16,23 +16,29 @@ export class FindAllTasksController{
             });
         }
         try{
-            const tasks: Task[] = await this.findAllTasksUseCase.run();
-            const taskCount: number = tasks.length;
+            // const tag = req.body.tag;
+            const {page, limit, tag} = req.query;
+            const responseTask = await this.findByTagUseCase.run(String(tag),Number(page),Number(limit));
 
-            if(taskCount === 0){
+            if(!responseTask){
                 return res.status(204).json({
                     error: false,
                     message: 'No tasks found'
                 });
             }
+            
+            if(responseTask.tasks.length === 0){
+                return res.status(204).json({
+                    error: false,
+                    message: 'No tasks found to specified tag'
+                });
+            }
             return res.status(200).json({
                 error: false,
                 message: 'Tasks found',
-                data: tasks,
-                count: taskCount
+                data: responseTask
             });
         }catch(err){
-            saveLogFile(err);
             return res.status(500).json({
                 error: true,
                 message: 'Internal server error',

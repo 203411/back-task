@@ -1,11 +1,11 @@
-import { Task } from "../../domain/Task";
-import { FindAllTasksUseCase } from "../../application/FindAllTasksUseCase";
-import saveLogFile from "../LogsErrorControl";
-import { Response,Request } from "express";
+import { Request, Response } from "express";
+import { FindByResponsibleUseCase } from "../../application/FindByResponsibleUseCase";
 import { validationResult } from "express-validator";
 
-export class FindAllTasksController{
-    constructor(private readonly findAllTasksUseCase: FindAllTasksUseCase){}
+export class FindByResponsibleController{
+    constructor(
+        private readonly findByResponsibleUseCase: FindByResponsibleUseCase
+    ){}
 
     async run(req: Request, res: Response): Promise<Response>{
         const errors = validationResult(req);
@@ -16,27 +16,34 @@ export class FindAllTasksController{
             });
         }
         try{
-            const tasks: Task[] = await this.findAllTasksUseCase.run();
-            const taskCount: number = tasks.length;
+            const {responsible, page, limit} = req.query;
+            
+            const responseTask = await this.findByResponsibleUseCase.run(String(responsible),Number(page),Number(limit));
 
-            if(taskCount === 0){
+            if(!responseTask){
                 return res.status(204).json({
                     error: false,
                     message: 'No tasks found'
                 });
             }
+            
+            if(responseTask.tasks.length === 0){
+                return res.status(204).json({
+                    error: false,
+                    message: 'No tasks found to specified responsible'
+                });
+            }
             return res.status(200).json({
                 error: false,
                 message: 'Tasks found',
-                data: tasks,
-                count: taskCount
+                data: responseTask
             });
         }catch(err){
-            saveLogFile(err);
             return res.status(500).json({
                 error: true,
                 message: 'Internal server error',
             });
         }
     }
+
 }

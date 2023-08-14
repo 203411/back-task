@@ -17,22 +17,22 @@ export class Task{
   @Column({nullable: false}) // Obligatorio
   dueDate!: string;
 
-  @Column()
+  @Column({default: "", nullable: true})
   comments!: string;
 
-  @Column()
+  @Column({default: "", nullable: true})
   responsible!: string;
 
-  @Column()
+  @Column({default: "", nullable: true})
   tags!: string;
 
   @Column({default: true})
   isPublic!: boolean;
 
-  @Column({default: ""})
+  @Column({default: "", nullable: true})
   urlImage!: string;
 
-  @Column()
+  @Column({nullable: true})
   userId!: number;
 
   @Column({default: () => "CURRENT_TIMESTAMP"})

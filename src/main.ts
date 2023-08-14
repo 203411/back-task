@@ -4,6 +4,8 @@ import taskRouter from "./task/infrastructure/TaskRouter";
 import userRouter from "./user/infraestructure/UserRouter";
 import moment from 'moment';
 import 'moment-timezone';
+import fileUpload from "express-fileupload";
+
 
 //Documentation
 import swagger from 'swagger-ui-express';
@@ -16,6 +18,7 @@ console.log(currentDateTime);
 
 const app = express();
 
+app.use(fileUpload());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

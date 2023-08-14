@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import { FindAndCountUseCase } from "../../application/FindAndCountUseCase";
 import { GetReponse } from "../../domain/GetResponse";
 import saveLogFile from "../LogsErrorControl";
@@ -8,7 +9,13 @@ export class FindAndCountController{
     constructor(private readonly findAndCountUseCase: FindAndCountUseCase){}
 
     async run(req: Request, res: Response): Promise<Response>{
-
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ 
+                error: true,
+                message:'Invalid input data'
+            });
+        }
         try{
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;

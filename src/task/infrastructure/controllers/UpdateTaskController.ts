@@ -3,6 +3,9 @@ import { UpdateTaskUseCase } from "../../application/UpdateTaskUseCase"; // Aseg
 import { validationResult } from 'express-validator';
 import saveLogFile from "../LogsErrorControl";
 import { FindByIDTaskUseCase } from "../../application/FindByIDTaskUseCase";
+import { UploadedFile } from "express-fileupload";
+import path from "path";
+import { v4 as uuidv4 } from 'uuid';
 
 export class UpdateTaskController {
     constructor(
@@ -31,21 +34,22 @@ export class UpdateTaskController {
             const formData = req.body;
 
             // Validar que la fecha de vencimiento sea mayor a la fecha actual
-            if (formData.dueDate < new Date()) {
-                return res.status(400).json({
-                    error: true,
-                    message: 'Due date must be greater than current date'
-                });
+            if(formData.dueDate){
+                if (formData.dueDate < new Date()) {
+                    return res.status(400).json({
+                        error: true,
+                        message: 'Due date must be greater than current date'
+                    });
+                }
+                // Validar el formato de la fecha (DD-MM-YYYY)
+                const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+                if (!dateRegex.test(formData.dueDate)) {
+                    return res.status(422).json({
+                        error: true,
+                        message: 'Invalid dueDate format. Use DD-MM-YYYY'
+                    });
+                }
             }
-            // Validar el formato de la fecha (DD-MM-YYYY)
-            const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
-            if (!dateRegex.test(formData.dueDate)) {
-                return res.status(422).json({
-                    error: true,
-                    message: 'Invalid dueDate format. Use DD-MM-YYYY'
-                });
-            }
-
             // Buscar la tarea a actualizar
             const existingTask = await this.findByIDTaskUseCase.run(taskId);
             
@@ -55,10 +59,39 @@ export class UpdateTaskController {
                     message: 'Task not found'
                 });
             }
+
+            // Actualizar imagen si se proporciona
+            let updatedImageUrl = existingTask.urlImage;
+            if (req.files && req.files.image) {
+                const image: UploadedFile = req.files.image as UploadedFile;
+                const allowedFileTypes = ['.pdf', '.jpg', '.png'];
+                const extension = path.extname(image.name);
+                if (!allowedFileTypes.includes(extension)) {
+                    return res.status(400).json({
+                        error: true,
+                        message: 'Invalid file type'
+                    });
+                }
+                const uniqueFileName = `${uuidv4()}${extension}`;
+                const uploadPath = path.join(__dirname, `../../../images/${uniqueFileName}`);
+                
+                image.mv(uploadPath, async (err) => {
+                    if (err) {
+                        saveLogFile(err);
+                        return res.status(500).json({
+                            error: true,
+                            message: 'Error uploading image'
+                        });
+                    }
+                });
+
+                updatedImageUrl = uploadPath;
+            }
             
             const updatedTask = {
                 ...existingTask,
-                ...formData
+                ...formData,
+                urlImage: updatedImageUrl
             }
 
             const result = await this.updateTaskUseCase.run(existingTask, updatedTask);

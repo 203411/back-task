@@ -2,10 +2,6 @@
 
 Este repositorio corresponde a la prueba Tecnica Backend
 
-## Proyecto Node.js con TypeScript, TypeORM y Arquitectura Hexagonal
-
-Este es un proyecto de Node.js que utiliza TypeScript, TypeORM y sigue la arquitectura hexagonal (también conocida como arquitectura de puertos y adaptadores). Proporciona una estructura modular y escalable para el desarrollo de aplicaciones.
-
 ### Comandos
 
 A continuación se describen los comandos disponibles en el archivo `package.json`:
@@ -43,3 +39,5 @@ Deben crearse dos carpetas en la direccion `/src` con los nombres `images` y `lo
 npm install
 ```
 4. Ejecuta los comandos descritos anteriormente según sea necesario.
+
+Para acceder al CRUD en un hosting, consulte el siguiente enlace:
